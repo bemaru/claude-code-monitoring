@@ -14,6 +14,10 @@ Claude Code → OTLP (4317/4318) → OTel Collector → Prometheus (메트릭) +
 docker compose up -d
 ```
 
+## 트러블슈팅
+
+`bash scripts/healthcheck.sh` 또는 [docs/architecture.md#트러블슈팅](docs/architecture.md#트러블슈팅) 참고.
+
 ## 주의사항
 
 - Collector의 `send_timestamps`는 반드시 `false`여야 함 (true이면 Prometheus가 stale 처리)
