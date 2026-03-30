@@ -50,9 +50,9 @@ fi
 echo ""
 
 # 3. Prometheus scrape
-echo "[3/5] Prometheus (localhost:9090)"
-if curl -sf http://localhost:9090/-/ready > /dev/null 2>&1; then
-  PROM_RESP=$(curl -sf 'http://localhost:9090/api/v1/query?query=up%7Bjob%3D%22otel-collector%22%7D' || true)
+echo "[3/5] Prometheus (localhost:19090)"
+if curl -sf http://localhost:19090/-/ready > /dev/null 2>&1; then
+  PROM_RESP=$(curl -sf 'http://localhost:19090/api/v1/query?query=up%7Bjob%3D%22otel-collector%22%7D' || true)
   if echo "$PROM_RESP" | grep -q '"1"'; then
     pass "Ready — otel-collector scrape target UP"
   elif [ -n "$PROM_RESP" ]; then
@@ -67,8 +67,8 @@ fi
 echo ""
 
 # 4. Loki
-echo "[4/5] Loki (localhost:3100)"
-if curl -sf http://localhost:3100/ready > /dev/null 2>&1; then
+echo "[4/5] Loki (localhost:13100)"
+if curl -sf http://localhost:13100/ready > /dev/null 2>&1; then
   pass "Ready"
 else
   fail "Cannot reach Loki"
@@ -77,8 +77,8 @@ fi
 echo ""
 
 # 5. Grafana
-echo "[5/5] Grafana (localhost:3030)"
-GRAFANA_HEALTH=$(curl -sf http://localhost:3030/api/health 2>/dev/null || true)
+echo "[5/5] Grafana (localhost:13000)"
+GRAFANA_HEALTH=$(curl -sf http://localhost:13000/api/health 2>/dev/null || true)
 if echo "$GRAFANA_HEALTH" | grep -q "ok"; then
   pass "Healthy"
 else

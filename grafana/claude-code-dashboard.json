@@ -106,8 +106,54 @@
       "type": "stat"
     },
     {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              { "color": "orange", "value": null }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 5 },
+      "id": 17,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        { "expr": "sum(max_over_time(claude_code_active_time_seconds_total{job=\"otel-collector\"}[1h])) or vector(0)", "legendFormat": "Active" }
+      ],
+      "title": "Active Time (1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 50 },
+              { "color": "green", "value": 80 }
+            ]
+          },
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 5 },
+      "id": 18,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        { "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[1h])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[1h])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\"}[1h])) + sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\"}[1h]))) * 100 or vector(0)", "legendFormat": "Cache Hit" }
+      ],
+      "title": "Cache Hit Rate (1h)",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
       "id": 101,
       "title": "Cost & Token Analysis",
       "type": "row"
@@ -271,6 +317,54 @@
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 49 },
+      "id": 106,
+      "title": "Efficiency",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 2 },
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 50 },
+      "id": 19,
+      "options": { "legend": { "displayMode": "list" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        {
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\"}[5m])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\"}[5m])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\",job=\"otel-collector\"}[5m])) + sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\",job=\"otel-collector\"}[5m]))) * 100",
+          "legendFormat": "Cache Hit Rate"
+        }
+      ],
+      "title": "Cache Hit Rate Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2 },
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 50 },
+      "id": 20,
+      "options": { "legend": { "displayMode": "list" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        { "expr": "sum(increase(claude_code_cost_usage_USD_total{job=\"otel-collector\"}[1h]))", "legendFormat": "Hourly Cost" }
+      ],
+      "title": "Cost Trend (Hourly)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 58 },
       "id": 105,
       "title": "Event Logs",
       "type": "row"

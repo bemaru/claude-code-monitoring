@@ -9,16 +9,16 @@ flowchart LR
     CC[Claude Code] -->|OTLP gRPC :4317| OC[OTel Collector]
     OC -->|scrape :8889| P[Prometheus]
     OC -->|OTLP HTTP| L[Loki]
-    P --> G[Grafana :3030]
+    P --> G[Grafana :13000]
     L --> G
 ```
 
 | Service | Port | Role |
 |---------|------|------|
 | OTel Collector | 4317 (gRPC), 4318 (HTTP), 8889 | OTLP 수신, 메트릭/로그 분배 |
-| Prometheus | 9090 | 메트릭 저장 (30일 보존) |
-| Loki | 3100 | 로그 저장 |
-| Grafana | 3030 | 대시보드 |
+| Prometheus | 19090 | 메트릭 저장 (30일 보존) |
+| Loki | 13100 | 로그 저장 |
+| Grafana | 13000 | 대시보드 |
 
 ## Quick Start
 
@@ -47,7 +47,7 @@ docker compose up -d
 
 ### 3. 대시보드 확인
 
-http://localhost:3030 → Claude Code Observability 대시보드
+http://localhost:13000 → Claude Code Observability 대시보드
 
 ![Grafana Dashboard](docs/images/dashboard.png)
 
@@ -84,10 +84,10 @@ bash scripts/healthcheck.sh
 bash scripts/healthcheck.sh
 
 # Prometheus에서 메트릭 직접 조회
-curl -s 'http://localhost:9090/api/v1/query?query=claude_code_session_count_total'
+curl -s 'http://localhost:19090/api/v1/query?query=claude_code_session_count_total'
 
 # Loki에서 로그 직접 조회
-curl -s 'http://localhost:3100/loki/api/v1/query?query={service_name="claude-code"}'
+curl -s 'http://localhost:13100/loki/api/v1/query?query={service_name="claude-code"}'
 ```
 
 자세한 트러블슈팅 가이드: [docs/architecture.md](docs/architecture.md#트러블슈팅)
