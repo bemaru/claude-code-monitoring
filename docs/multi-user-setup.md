@@ -2,6 +2,8 @@
 
 사내 Claude Code 공용 계정 사용 시 사용자별 비용/효율을 추적하기 위한 설정 가이드.
 
+> **참고**: 공식 Claude Code 모니터링 문서: <https://code.claude.com/docs/en/monitoring-usage>
+
 ## 아키텍처
 
 ```
@@ -47,6 +49,12 @@ docker compose up -d
 |-----------|------|------|
 | `user.name` | 사용자 식별자 (Prometheus label: `user_name`) | `kimjh` |
 | `team` | 소속 팀 (비용 팀별 집계용) | `backend`, `frontend` |
+
+공식 문서에서는 `department`, `team.id`, `cost_center` 등의 attribute도 예시로 안내하고 있습니다 (예: `department=engineering,team.id=platform,cost_center=eng-123`). 팀 상황에 맞는 attribute 키를 자유롭게 선택하면 됩니다.
+
+### OAuth 인증 시 자동 attribute
+
+Claude Code를 OAuth로 인증한 경우, `user.email`이 텔레메트리 attribute에 자동으로 포함됩니다. 이 경우 `OTEL_RESOURCE_ATTRIBUTES`에 별도로 사용자 식별 attribute를 추가하지 않아도 사용자 구분이 가능합니다.
 
 ### chezmoi로 배포하는 경우
 
