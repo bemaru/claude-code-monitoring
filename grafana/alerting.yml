@@ -1,0 +1,137 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: claude-code-cost-alerts
+    folder: Claude Code
+    interval: 5m
+    rules:
+      # Daily cost threshold: alert when total daily cost exceeds $50
+      - uid: daily-cost-threshold
+        title: Daily cost exceeds threshold
+        condition: threshold
+        for: 5m
+        annotations:
+          summary: "Total daily Claude Code cost has exceeded $50"
+          description: "The total cost across all users for today is {{ $value }} USD, which exceeds the $50 threshold."
+        labels:
+          severity: warning
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400  # 24 hours in seconds
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: sum(increase(claude_code_cost_usage_USD_total[24h]))
+              instant: true
+              refId: A
+          - refId: threshold
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              conditions:
+                - evaluator:
+                    type: gt
+                    params:
+                      - 50
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    type: last
+
+      # Per-user hourly cost threshold: alert when a single user exceeds $10/hour
+      - uid: per-user-hourly-cost
+        title: Per-user hourly cost exceeds threshold
+        condition: threshold
+        for: 5m
+        annotations:
+          summary: "User {{ $labels.user_name }} hourly cost exceeded $10"
+          description: "User {{ $labels.user_name }} has spent {{ $value }} USD in the last hour."
+        labels:
+          severity: warning
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 3600  # 1 hour in seconds
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: sum by (user_name) (increase(claude_code_cost_usage_USD_total[1h]))
+              instant: true
+              refId: A
+          - refId: threshold
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              conditions:
+                - evaluator:
+                    type: gt
+                    params:
+                      - 10
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    type: last
+
+      # Low cache hit rate: alert when any user's cache hit rate drops below 50%
+      - uid: low-cache-hit-rate
+        title: Low cache hit rate
+        condition: threshold
+        for: 5m
+        annotations:
+          summary: "User {{ $labels.user_name }} has low cache hit rate"
+          description: "User {{ $labels.user_name }} cache hit rate is {{ $value }}%, below the 50% threshold."
+        labels:
+          severity: info
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 3600  # 1 hour in seconds
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: >-
+                100 * sum by (user_name) (increase(claude_code_token_usage_tokens_total{type="cacheRead"}[1h]))
+                /
+                (
+                  sum by (user_name) (increase(claude_code_token_usage_tokens_total{type="cacheRead"}[1h]))
+                  + sum by (user_name) (increase(claude_code_token_usage_tokens_total{type="input"}[1h]))
+                  + sum by (user_name) (increase(claude_code_token_usage_tokens_total{type="cacheCreation"}[1h]))
+                )
+              instant: true
+              refId: A
+          - refId: threshold
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              conditions:
+                - evaluator:
+                    type: lt
+                    params:
+                      - 50
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    type: last

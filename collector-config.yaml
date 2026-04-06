@@ -13,6 +13,38 @@ processors:
   memory_limiter:
     check_interval: 1s
     limit_mib: 512
+  resource/metrics:
+    attributes:
+      - key: telemetry.sdk.name
+        action: delete
+      - key: telemetry.sdk.version
+        action: delete
+      - key: telemetry.sdk.language
+        action: delete
+      - key: service.version
+        action: delete
+      - key: process.pid
+        action: delete
+      - key: process.executable.name
+        action: delete
+      - key: process.executable.path
+        action: delete
+      - key: process.command_args
+        action: delete
+      - key: process.runtime.name
+        action: delete
+      - key: process.runtime.version
+        action: delete
+      - key: process.runtime.description
+        action: delete
+      - key: host.name
+        action: delete
+      - key: host.arch
+        action: delete
+      - key: os.type
+        action: delete
+      - key: os.description
+        action: delete
 
 exporters:
   prometheus:
@@ -20,6 +52,8 @@ exporters:
     send_timestamps: false
     metric_expiration: 180m
     enable_open_metrics: true
+    resource_to_telemetry_conversion:
+      enabled: true
 
   otlphttp:
     endpoint: http://loki:3100/otlp
@@ -31,7 +65,7 @@ service:
   pipelines:
     metrics:
       receivers: [otlp]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, resource/metrics, batch]
       exporters: [prometheus, debug]
 
     logs:

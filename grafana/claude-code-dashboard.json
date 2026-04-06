@@ -31,7 +31,7 @@
       "id": 1,
       "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "targets": [
-        { "expr": "count(count_over_time(claude_code_session_count_total{job=\"otel-collector\"}[1h])) or vector(0)", "legendFormat": "Sessions" }
+        { "expr": "count(count_over_time(claude_code_session_count_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) or vector(0)", "legendFormat": "Sessions" }
       ],
       "title": "Sessions (1h)",
       "type": "stat"
@@ -54,7 +54,7 @@
       "id": 2,
       "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "targets": [
-        { "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{job=\"otel-collector\"}[1h])) or vector(0)", "legendFormat": "Cost" }
+        { "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) or vector(0)", "legendFormat": "Cost" }
       ],
       "title": "Cost (1h)",
       "type": "stat"
@@ -77,7 +77,7 @@
       "id": 3,
       "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "targets": [
-        { "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{job=\"otel-collector\"}[1h])) or vector(0)", "legendFormat": "Tokens" }
+        { "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) or vector(0)", "legendFormat": "Tokens" }
       ],
       "title": "Tokens (1h)",
       "type": "stat"
@@ -100,7 +100,7 @@
       "id": 4,
       "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "targets": [
-        { "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{job=\"otel-collector\"}[1h])) or vector(0)", "legendFormat": "LoC" }
+        { "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) or vector(0)", "legendFormat": "LoC" }
       ],
       "title": "Lines of Code (1h)",
       "type": "stat"
@@ -121,7 +121,7 @@
       "id": 17,
       "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "targets": [
-        { "expr": "sum(max_over_time(claude_code_active_time_seconds_total{job=\"otel-collector\"}[1h])) or vector(0)", "legendFormat": "Active" }
+        { "expr": "sum(max_over_time(claude_code_active_time_seconds_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) or vector(0)", "legendFormat": "Active" }
       ],
       "title": "Active Time (1h)",
       "type": "stat"
@@ -165,7 +165,7 @@
       "id": 5,
       "options": { "legend": { "displayMode": "table", "calcs": ["sum", "mean"] } },
       "targets": [
-        { "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{job=\"otel-collector\"}[1h]))", "legendFormat": "{{model}}" }
+        { "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h]))", "legendFormat": "{{model}}" }
       ],
       "title": "Cost by Model (Hourly)",
       "type": "timeseries"
@@ -177,7 +177,7 @@
       "id": 6,
       "options": { "legend": { "displayMode": "table", "calcs": ["sum"] } },
       "targets": [
-        { "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total{job=\"otel-collector\"}[5m]) * 60)", "legendFormat": "{{type}}" }
+        { "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[5m]) * 60)", "legendFormat": "{{type}}" }
       ],
       "title": "Token Usage Rate by Type",
       "type": "timeseries"
@@ -297,7 +297,7 @@
       "id": 13,
       "options": { "legend": { "displayMode": "table", "calcs": ["sum"] } },
       "targets": [
-        { "expr": "sum by (type) (rate(claude_code_lines_of_code_count_total{job=\"otel-collector\"}[5m]) * 60)", "legendFormat": "{{type}}" }
+        { "expr": "sum by (type) (rate(claude_code_lines_of_code_count_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[5m]) * 60)", "legendFormat": "{{type}}" }
       ],
       "title": "Code Changes Rate (lines/min)",
       "type": "timeseries"
@@ -309,7 +309,7 @@
       "id": 14,
       "options": { "legend": { "displayMode": "table", "calcs": ["sum"] } },
       "targets": [
-        { "expr": "sum(increase(claude_code_active_time_seconds_total{job=\"otel-collector\"}[5m]))", "legendFormat": "Active Time" }
+        { "expr": "sum(increase(claude_code_active_time_seconds_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[5m]))", "legendFormat": "Active Time" }
       ],
       "title": "Active Time (per 5min)",
       "type": "timeseries"
@@ -337,7 +337,7 @@
       "options": { "legend": { "displayMode": "list" }, "tooltip": { "mode": "single" } },
       "targets": [
         {
-          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\"}[5m])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\"}[5m])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\",job=\"otel-collector\"}[5m])) + sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\",job=\"otel-collector\"}[5m]))) * 100",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[5m])) / (sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[5m])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[5m])) + sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[5m]))) * 100",
           "legendFormat": "Cache Hit Rate"
         }
       ],
@@ -357,7 +357,7 @@
       "id": 20,
       "options": { "legend": { "displayMode": "list" }, "tooltip": { "mode": "single" } },
       "targets": [
-        { "expr": "sum(increase(claude_code_cost_usage_USD_total{job=\"otel-collector\"}[1h]))", "legendFormat": "Hourly Cost" }
+        { "expr": "sum(increase(claude_code_cost_usage_USD_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h]))", "legendFormat": "Hourly Cost" }
       ],
       "title": "Cost Trend (Hourly)",
       "type": "timeseries"
@@ -365,6 +365,112 @@
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 58 },
+      "id": 107,
+      "title": "User Analysis",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "currencyUSD", "custom": { "drawStyle": "bars", "stacking": { "mode": "normal" }, "fillOpacity": 80 } },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 59 },
+      "id": 21,
+      "options": { "legend": { "displayMode": "table", "calcs": ["sum"], "sortBy": "Total", "sortDesc": true } },
+      "targets": [
+        { "expr": "sum by (user_name) (increase(claude_code_cost_usage_USD_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h]))", "legendFormat": "{{user_name}}" }
+      ],
+      "title": "Cost by User (Hourly)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "short", "custom": { "drawStyle": "bars", "stacking": { "mode": "normal" }, "fillOpacity": 80 } }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 59 },
+      "id": 22,
+      "options": { "legend": { "displayMode": "table", "calcs": ["sum"], "sortBy": "Total", "sortDesc": true } },
+      "targets": [
+        { "expr": "sum by (user_name) (increase(claude_code_token_usage_tokens_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h]))", "legendFormat": "{{user_name}}" }
+      ],
+      "title": "Tokens by User (Hourly)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent", "min": 0, "max": 100,
+          "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 50 }, { "color": "green", "value": 80 }] },
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 67 },
+      "id": 23,
+      "options": { "legend": { "displayMode": "table", "calcs": ["mean"] } },
+      "targets": [
+        {
+          "expr": "sum by (user_name) (increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) / (sum by (user_name) (increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) + sum by (user_name) (increase(claude_code_token_usage_tokens_total{type=\"input\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h])) + sum by (user_name) (increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\",job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h]))) * 100",
+          "legendFormat": "{{user_name}}"
+        }
+      ],
+      "title": "Cache Hit Rate by User",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "short", "custom": { "drawStyle": "bars", "stacking": { "mode": "normal" }, "fillOpacity": 80 } }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 67 },
+      "id": 24,
+      "options": { "legend": { "displayMode": "table", "calcs": ["sum"], "sortBy": "Total", "sortDesc": true } },
+      "targets": [
+        { "expr": "sum by (user_name) (increase(claude_code_lines_of_code_count_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h]))", "legendFormat": "{{user_name}}" }
+      ],
+      "title": "Code Changes by User (Hourly)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "Lower is more cost-efficient",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] }
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 75 },
+      "id": 25,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        {
+          "expr": "sum by (user_name, model) (increase(claude_code_cost_usage_USD_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[$__range]))",
+          "legendFormat": "{{user_name}} / {{model}}"
+        }
+      ],
+      "title": "Cost by User × Model",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "currencyUSD", "custom": { "drawStyle": "bars", "stacking": { "mode": "normal" }, "fillOpacity": 80 } }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 75 },
+      "id": 26,
+      "options": { "legend": { "displayMode": "table", "calcs": ["sum"], "sortBy": "Total", "sortDesc": true } },
+      "targets": [
+        { "expr": "sum by (team) (increase(claude_code_cost_usage_USD_total{job=\"otel-collector\",service_name=\"claude-code\",user_name=~\"$user_name\",team=~\"$team\"}[1h]))", "legendFormat": "{{team}}" }
+      ],
+      "title": "Cost by Team (Hourly)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 83 },
       "id": 105,
       "title": "Event Logs",
       "type": "row"
@@ -401,7 +507,42 @@
   "refresh": "30s",
   "schemaVersion": 39,
   "tags": ["claude-code", "observability"],
-  "templating": { "list": [] },
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": "Prometheus",
+        "definition": "label_values(claude_code_cost_usage_USD_total, user_name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "User",
+        "multi": true,
+        "name": "user_name",
+        "options": [],
+        "query": "label_values(claude_code_cost_usage_USD_total, user_name)",
+        "refresh": 2,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": "Prometheus",
+        "definition": "label_values(claude_code_cost_usage_USD_total, team)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Team",
+        "multi": true,
+        "name": "team",
+        "options": [],
+        "query": "label_values(claude_code_cost_usage_USD_total, team)",
+        "refresh": 2,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
   "time": { "from": "now-1h", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
